@@ -1,0 +1,10 @@
+.venv
+.git
+data
+secrets
+__pycache__
+*.pyc
+.env
+.env.example
+*.md
+*.pdf
