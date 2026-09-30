@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отчёт — Распознавание языка (Вар. 18)</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 1.5cm;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            font-size: 11pt;
+            line-height: 1.5;
+            color: #000;
+            background: #fff;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        h1 {
+            color: #1f4e79;
+            border-bottom: 3px solid #1f4e79;
+            padding-bottom: 8px;
+            font-size: 20pt;
+            text-align: center;
+        }
+        
+        h2 {
+            color: #2e75b6;
+            border-left: 5px solid #2e75b6;
+            padding-left: 10px;
+            margin-top: 30px;
+            font-size: 14pt;
+        }
+        
+        h3 {
+            color: #404040;
+            font-size: 12pt;
+            margin-top: 20px;
+        }
+        
+        h4 {
+            color: #555;
+            font-size: 11pt;
+            margin-top: 15px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 10pt;
+        }
+        
+        th, td {
+            border: 1px solid #333;
+            padding: 6px 8px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #1f4e79;
+            color: white;
+            font-weight: bold;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f7fb;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 11pt;
+            color: #555;
+            margin-bottom: 30px;
+        }
+        
+        .metrics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .metric {
+            flex: 1;
+            min-width: 150px;
+            padding: 15px;
+            border: 2px solid #1f4e79;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #1f4e79;
+        }
+        
+        .metric-label {
+            font-size: 10pt;
+            color: #555;
+            margin-top: 5px;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            padding-top: 15px;
+            border-top: 1px solid #ccc;
+            font-size: 9pt;
+            color: #666;
+            text-align: center;
+        }
+        
+        .method-desc {
+            background: #f9f9f9;
+            padding: 12px;
+            border-left: 4px solid #2e75b6;
+            margin: 10px 0;
+        }
+        
+        .no-print {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .print-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 14pt;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        .print-btn:hover {
+            background: #45a049;
+        }
+        
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                padding: 0;
+            }
+            h2 {
+                page-break-before: always;
+            }
+            h2:first-of-type {
+                page-break-before: avoid;
+            }
+            table {
+                page-break-inside: auto;
+            }
+            tr {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="no-print">
+        <button class="print-btn" onclick="window.print()">Распечатать отчёт</button>
+        <button class="print-btn" onclick="window.close()">Закрыть</button>
+    </div>
+
+    <h1>Отчёт по лабораторной работе<br>«Автоматическое распознавание языка текста»</h1>
+    
+    <div class="subtitle">
+        <strong>Вариант 18</strong> | Языки: Испанский, Английский | Формат документов: PDF<br>
+        Методы: частотных слов, коротких слов, нейросетевой<br>
+        Дата формирования отчёта: {{now}}
+    </div>
+
+    <h2>1. Сравнительная таблица результатов по методам</h2>
+    <p>Каждая строка — документ. Столбцы — результат каждого метода. Итоговый язык определяется голосованием большинства.</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>№</th>
+                <th>Имя файла</th>
+                <th>Источник</th>
+                <th>Частотные слова</th>
+                <th>Короткие слова</th>
+                <th>Нейросеть</th>
+                <th>Итоговый язык</th>
+                <th>Статус</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{table_rows}}
+        </tbody>
+    </table>
+
+    <h2>2. Сравнительная статистика методов</h2>
+    <p>Количество документов, отнесённых каждым методом к каждому языку.</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Метод</th>
+                <th>Spanish</th>
+                <th>English</th>
+                <th>Unknown</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{stats_rows}}
+        </tbody>
+    </table>
+
+    <h2>3. Сводная статистика по коллекции</h2>
+    <div class="metrics">
+        <div class="metric">
+            <div class="metric-value">{{total_docs}}</div>
+            <div class="metric-label">Всего документов</div>
+        </div>
+        <div class="metric">
+            <div class="metric-value">{{spanish_count}}</div>
+            <div class="metric-label">Испанский</div>
+        </div>
+        <div class="metric">
+            <div class="metric-value">{{english_count}}</div>
+            <div class="metric-label">Английский</div>
+        </div>
+        <div class="metric">
+            <div class="metric-value">{{unknown_count}}</div>
+            <div class="metric-label">Не определено</div>
+        </div>
+    </div>
+
+    <h3>3.1. Распределение по источникам</h3>
+    <ul>
+        <li>Из папки синхронизации: <strong>{{folder_count}}</strong></li>
+        <li>Через интерфейс: <strong>{{frontend_count}}</strong></li>
+    </ul>
+
+    <h2>4. Описание методов распознавания</h2>
+
+    <h3>4.1. Метод частотных слов</h3>
+    <div class="method-desc">
+        <p><strong>Поисковый образ языка (ПОЯ)</strong> — набор слов с наибольшей частотой встречаемости в обучающем корпусе (ТОП-300 слов).</p>
+        <p><strong>Алгоритм:</strong></p>
+        <ol>
+            <li>Из тренировочного корпуса для каждого языка извлекаются все слова и считается их частота</li>
+            <li>Формируется множество ТОП-300 самых частых слов — это ПОЯ языка</li>
+            <li>Для входного документа также формируется ТОП-300 частых слов</li>
+            <li>Языком считается тот, чей ПОЯ имеет <strong>максимальное пересечение</strong> с ТОП-300 документа</li>
+        </ol>
+    </div>
+
+    <h3>4.2. Метод коротких слов</h3>
+    <div class="method-desc">
+        <p><strong>ПОЯ</strong> — набор лексем длиной ≤5 символов, встретившихся в обучающем корпусе более 3 раз, с рассчитанными вероятностями.</p>
+        <p><strong>Алгоритм:</strong></p>
+        <ol>
+            <li>Из тренировочного корпуса извлекаются короткие слова (≤5 символов)</li>
+            <li>Для каждого слова рассчитывается вероятность: P(слово) = частота / сумма_частот_всех_коротких_слов</li>
+            <li>Входной документ разбивается на лексемы</li>
+            <li>Лексемам, присутствующим в ПОЯ, назначаются их вероятности; отсутствующим — минимальная вероятность</li>
+            <li>Вероятность принадлежности предложения языку = <strong>произведение вероятностей его лексем</strong> (сумма логарифмов)</li>
+        </ol>
+    </div>
+
+    <h3>4.3. Нейросетевой метод</h3>
+    <div class="method-desc">
+        <p><strong>ПОЯ</strong> — обученная нейронная сеть (MLP), принимающая на вход символьные N-граммы текста.</p>
+        <p><strong>Алгоритм:</strong></p>
+        <ol>
+            <li>Тренировочный корпус нарезается на фрагменты по 200 символов, каждому присваивается метка языка</li>
+            <li>Фрагменты векторизуются через <strong>character N-граммы (2–4)</strong> с помощью CountVectorizer</li>
+            <li>На полученных векторах обучается многослойный перцептрон (MLPClassifier из scikit-learn)</li>
+            <li>Входной документ векторизуется тем же способом и подаётся на вход сети</li>
+            <li>Сеть выдаёт предсказание языка</li>
+        </ol>
+    </div>
+
+    <div class="footer">
+        Отчёт сформирован: {{now}} | Система автоматического распознавания языка текста (Вариант 18) | MVC-архитектура на базе Streamlit + MySQL
+    </div>
+</body>
+</html>

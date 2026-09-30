@@ -1,0 +1,14 @@
+{
+  "languages": [
+    "english",
+    "spanish"
+  ],
+  "frequent_words_count": {
+    "english": 300,
+    "spanish": 300
+  },
+  "short_words_count": {
+    "english": 177,
+    "spanish": 1534
+  }
+}
