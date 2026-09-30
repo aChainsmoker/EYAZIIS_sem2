@@ -5,6 +5,7 @@ import math
 import pickle
 from collections import Counter
 import PyPDF2
+import time
 from sklearn.neural_network import MLPClassifier
 from sklearn.feature_extraction.text import CountVectorizer
 
@@ -24,7 +25,7 @@ class LanguageModel:
             self._use_stub_profiles()
 
     # ============================================================
-    #  ЗАГРУЗКА МОДЕЛИ (без изменений)
+    #  ЗАГРУЗКА МОДЕЛИ
     # ============================================================
     def _load_model(self):
         if not os.path.isdir(self.model_dir):
@@ -111,7 +112,7 @@ class LanguageModel:
         self.nn_model.fit(X_vec, y_train)
 
     # ============================================================
-    #  ИЗВЛЕЧЕНИЕ ТЕКСТА (без изменений)
+    #  ИЗВЛЕЧЕНИЕ ТЕКСТА
     # ============================================================
     def extract_text_from_pdf(self, pdf_path):
         text = ""
@@ -130,6 +131,8 @@ class LanguageModel:
     #  ЕДИНЫЙ МЕТОД АНАЛИЗА ТЕКСТА (заменяет все detect_* и prepare_*)
     # ============================================================
     def analyze_text(self, text):
+        t0 = time.perf_counter()
+
         if not text.strip():
             return {
                 'classification': {
@@ -149,39 +152,35 @@ class LanguageModel:
         short_words = [w for w in words if len(w) <= 5]
         short_counts = Counter(short_words)
 
-        # === МЕТОД 1: ЧАСТОТНЫХ СЛОВ (классификация + данные для БД) ===
+        # === МЕТОД 1: ЧАСТОТНЫХ СЛОВ ===
+        t1 = time.perf_counter()
         freq_scores = {}
         freq_db_data = {}
         for lang, profile in self.frequent_profiles.items():
-            # Классификация: взвешенная сумма
             score = 0.0
             for word, count_in_doc in doc_counts.items():
                 if word in profile:
                     score += profile[word] * count_in_doc
             freq_scores[lang] = score
-
-            # Данные для БД: все слова ПОЯ с частотами
             lang_key = lang.lower()
             freq_db_data[lang_key] = [
                 {'word': w, 'train_freq': c, 'doc_freq': doc_counts.get(w, 0)}
                 for w, c in profile.items()
             ]
-
         res_freq = max(freq_scores, key=freq_scores.get) if max(freq_scores.values()) > 0 else 'Unknown'
+        t2 = time.perf_counter()
+        print(f"Метод частотных слов: {t2 - t1:.4f} сек → {res_freq}")
 
-        # === МЕТОД 2: КОРОТКИХ СЛОВ (классификация + данные для БД) ===
+        # === МЕТОД 2: КОРОТКИХ СЛОВ ===
         min_prob = 1e-10
         short_scores = {}
         short_db_data = {}
         for lang, profile in self.short_word_profiles.items():
-            # Классификация: сумма логарифмов
             log_sum = 0.0
             for word in short_words:
                 prob = profile.get(word, min_prob)
                 log_sum += math.log(prob)
             short_scores[lang] = log_sum
-
-            # Данные для БД: уникальные короткие слова из документа
             lang_key = lang.lower()
             short_db_data[lang_key] = []
             for word in sorted(set(short_words)):
@@ -193,18 +192,17 @@ class LanguageModel:
                     'assigned_prob': prob_assigned,
                     'doc_freq': short_counts.get(word, 0)
                 })
-
         res_short = max(short_scores, key=short_scores.get) if short_scores else 'Unknown'
+        t3 = time.perf_counter()
+        print(f"Метод коротких слов: {t3 - t2:.4f} сек → {res_short}")
 
-        # === МЕТОД 3: НЕЙРОСЕТЕВОЙ (классификация + данные для БД) ===
+        # === МЕТОД 3: НЕЙРОСЕТЕВОЙ ===
         res_nn = 'Unknown'
         ngram_db_data = []
         if self.nn_model is not None and self.nn_vectorizer is not None:
             try:
                 X_vec = self.nn_vectorizer.transform([text])
                 res_nn = self.nn_model.predict(X_vec)[0]
-
-                # Данные для БД: N-граммы через тот же векторизатор
                 ngram_vectorizer = CountVectorizer(
                     analyzer='char', ngram_range=(2, 4), max_features=100
                 )
@@ -216,11 +214,16 @@ class LanguageModel:
                     for f, c in zip(ngram_features, ngram_counts)
                 ], key=lambda x: x['doc_freq'], reverse=True)
             except Exception as e:
-                print(f"Ошибка нейросети: {e}")
+                print(f" Ошибка нейросети: {e}")
+        t4 = time.perf_counter()
+        print(f" Нейросетевой метод: {t4 - t3:.4f} сек → {res_nn}")
 
         # === ГОЛОСОВАНИЕ ===
         votes = [res_freq, res_short, res_nn]
         final = max(set(votes), key=votes.count)
+
+        t_end = time.perf_counter()
+        print(f" Итого анализ текста: {t_end - t0:.4f} сек | Итоговый язык: {final}")
 
         return {
             'classification': {
