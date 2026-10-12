@@ -1,0 +1,7 @@
+__pycache__/
+*.pdf
+secrets/
+.venv/
+.env
+*.png
+*.csv
