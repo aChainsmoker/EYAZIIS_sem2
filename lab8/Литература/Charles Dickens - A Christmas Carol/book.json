@@ -1,0 +1,11 @@
+{
+  "title": "A Christmas Carol",
+  "author": "Charles Dickens",
+  "year": 1843,
+  "source_url": "https://www.gutenberg.org/ebooks/46",
+  "download_url": "https://www.gutenberg.org/cache/epub/46/pg46.txt",
+  "gutenberg_id": 46,
+  "chapter_count": 5,
+  "source_sha256": "8c36b93723d454982df045ec0efdf2664e5a48e6b5e2f670e883575f75ad0cc8",
+  "edition_note": "Complete narrative; Gutenberg header/license and editorial front matter are separate. Original author's preface, letters and epilogues are included where identified. Source line wrapping is removed; paragraph breaks are preserved."
+}

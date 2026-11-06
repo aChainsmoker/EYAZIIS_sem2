@@ -1,0 +1,11 @@
+{
+  "title": "Frankenstein",
+  "author": "Mary Shelley",
+  "year": 1831,
+  "source_url": "https://www.gutenberg.org/ebooks/84",
+  "download_url": "https://www.gutenberg.org/cache/epub/84/pg84.txt",
+  "gutenberg_id": 84,
+  "chapter_count": 29,
+  "source_sha256": "2b97b7f8aad508649481d8dd4f6b54f9b965ddb3ba634e9151c815f537b49e42",
+  "edition_note": "Complete narrative; Gutenberg header/license and editorial front matter are separate. Original author's preface, letters and epilogues are included where identified. Source line wrapping is removed; paragraph breaks are preserved."
+}

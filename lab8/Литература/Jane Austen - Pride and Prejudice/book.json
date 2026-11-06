@@ -1,0 +1,11 @@
+{
+  "title": "Pride and Prejudice",
+  "author": "Jane Austen",
+  "year": 1813,
+  "source_url": "https://www.gutenberg.org/ebooks/1342",
+  "download_url": "https://www.gutenberg.org/cache/epub/1342/pg1342.txt",
+  "gutenberg_id": 1342,
+  "chapter_count": 61,
+  "source_sha256": "3f6bb9d6f78e0293b56acd4714dd68cb7d6d1d293402031ce9d5a216bcaf9d75",
+  "edition_note": "Complete narrative; Gutenberg header/license and editorial front matter are separate. Original author's preface, letters and epilogues are included where identified. Source line wrapping is removed; paragraph breaks are preserved."
+}

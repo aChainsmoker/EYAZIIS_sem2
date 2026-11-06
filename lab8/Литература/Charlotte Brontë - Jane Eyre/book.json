@@ -1,0 +1,11 @@
+{
+  "title": "Jane Eyre",
+  "author": "Charlotte Brontë",
+  "year": 1847,
+  "source_url": "https://www.gutenberg.org/ebooks/1260",
+  "download_url": "https://www.gutenberg.org/cache/epub/1260/pg1260.txt",
+  "gutenberg_id": 1260,
+  "chapter_count": 38,
+  "source_sha256": "13414dee2951c3ee731d76d2ffd822016b2479c892162760c5d0eb2aa5fa7631",
+  "edition_note": "Complete narrative; Gutenberg header/license and editorial front matter are separate. Original author's preface, letters and epilogues are included where identified. Source line wrapping is removed; paragraph breaks are preserved."
+}
