@@ -1,0 +1,41 @@
+[database]
+url = "postgresql+psycopg2://postgres:postgres@localhost:5459/eyaziis_sem2_lab9"
+user = "postgres"
+password = "postgres"
+name = "eyaziis_sem2_lab9"
+[s3]
+endpoint = "http://localhost:9010"
+access_key = "minioadmin"
+secret_key = "minioadmin"
+bucket = "eyaziis-lab9"
+[catalog]
+directory = "data/incoming"
+[whisper]
+model = "small"
+sample_rate = 16000
+chunk_duration = 0.5
+buffer_size = 5
+silence_threshold = 0.01
+silence_patience = 1.0
+min_audio_rms = 0.005
+min_transcribe_interval = 2.0
+ffmpeg_path = "ffmpeg/bin/ffmpeg.exe"
+decode_timeout_seconds = 120
+
+[search]
+k1 = 1.2
+b = 0.75
+limit = 20
+
+[summary]
+sentence_count = 10
+sentence_extraction_weight = 0.7
+textrank_weight = 0.3
+
+[tts]
+chunk_characters = 2000
+timeout_seconds = 180
+
+[tts.voices]
+ru = ""
+en = ""
